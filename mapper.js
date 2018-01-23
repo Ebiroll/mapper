@@ -37,20 +37,37 @@ module.exports = function(RED) {
     function MapperNode(config) {
         RED.nodes.createNode(this,config);
         var node = this;
+        function Bytes2Float32(bytes)
+        {
+            var sign = (bytes & 0x80000000) ? -1 : 1;
+            var exponent = ((bytes >> 23) & 0xFF) - 127;
+            var significand = (bytes & ~(-1 << 23));
+        
+            if (exponent == 128) 
+                return sign * ((significand) ? Number.NaN : Number.POSITIVE_INFINITY);
+        
+            if (exponent == -127) {
+                if (significand == 0) return sign * 0.0;
+                exponent = -126;
+                significand /= (1 << 22);
+            } else significand = (significand | (1 << 23)) / (1 << 23);
+        
+            return sign * significand * Math.pow(2, exponent);
+        }        
         node.on('input', function(msg) {
             var plot = {}
             plot.name = "test"
             if (true /*msg.payload.len()>7*/) {
-                var deg_lat =  msg.payload[2] +  (msg.payload[3] << 8 );
-                var min_lat =  msg.payload[0] +  (msg.payload[1] << 8);
-                var deg_lon = msg.payload[6] + (msg.payload[7] << 8);
-                var min_lon = msg.payload[4] + (msg.payload[5] << 8);
+                // bytes[3] << 24 | bytes[2] << 16 | bytes[1] << 8 | bytes[0];
+                var lat = (msg.payload[3] << 24)  +  (msg.payload[2] << 16 ) +  (msg.payload[1] << 8 ) + msg.payload[0];
+                var lon = (msg.payload[7] << 24)  +  (msg.payload[6] << 16 ) +  (msg.payload[5] << 8 ) + msg.payload[4]
+         
 
-
-                plot.lat = deg_lat/1000 + min_lat/60000;
-                plot.lon = deg_lon/1000 + min_lon/60000;  
+                plot.lat =  Bytes2Float32(lat);
+                plot.lon = Bytes2Float32(lon);  
+                plot.layer = 'drawing';
             }
-            plot.payload=msg.payload;
+            //plot.payload=msg.payload;
                          
             // 79B16D42 CDA28E41
             //{name:"Joe", lat:51, lon:-1.05}
