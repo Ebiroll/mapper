@@ -1,0 +1,30 @@
+{
+  "name": "mapper",
+  "version": "1.0.0",
+  "description": "Take Hex lat long positions and convert to lat,lon",
+  "main": "mapper.js",
+  "scripts": {
+    "test": "maptest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ebiroll/mapper.git"
+  },
+  "keywords": [
+    "Node",
+    "red",
+    "map",
+    "converter"
+  ],
+  "author": "olof.astrand@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ebiroll/mapper/issues"
+  },
+  "homepage": "https://github.com/Ebiroll/mapper#readme",
+  "node-red": {
+    "nodes": {
+      "lower-case": "mapper.js"
+    }
+  }
+}
