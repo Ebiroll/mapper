@@ -72,7 +72,12 @@ module.exports = function(RED) {
             // 79B16D42 CDA28E41
             //{name:"Joe", lat:51, lon:-1.05}
             //msg.payload = msg.payload.toLowerCase();
-            node.send(plot);
+            plot.icon='trophy';
+            var msg;        
+            msg.payload=plot;
+            msg.data=plot; 
+            //node.send(JSON.stringify(msg));
+            node.send(msg);
         });
     }
     RED.nodes.registerType("mapper",MapperNode);
