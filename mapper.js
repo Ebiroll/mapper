@@ -56,7 +56,7 @@ module.exports = function(RED) {
         }        
         node.on('input', function(msg) {
             var plot = {}
-            plot.name = "test"
+            plot.name = "test" + msg.payload[0];
             if (true /*msg.payload.len()>7*/) {
                 // bytes[3] << 24 | bytes[2] << 16 | bytes[1] << 8 | bytes[0];
                 var lat = (msg.payload[3] << 24)  +  (msg.payload[2] << 16 ) +  (msg.payload[1] << 8 ) + msg.payload[0];
@@ -65,14 +65,14 @@ module.exports = function(RED) {
 
                 plot.lat =  Bytes2Float32(lat);
                 plot.lon = Bytes2Float32(lon);  
-                plot.layer = 'drawing';
+                plot.layer = 'lora';
             }
             //plot.payload=msg.payload;
                          
             // 79B16D42 CDA28E41
             //{name:"Joe", lat:51, lon:-1.05}
             //msg.payload = msg.payload.toLowerCase();
-            plot.icon='trophy';
+            plot.icon='wifi';
             var msg;        
             msg.payload=plot;
             msg.data=plot; 
